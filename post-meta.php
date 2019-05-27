@@ -72,6 +72,9 @@ function episode_audio_meta_box( $post ) {
 		<button type="button" class="button button-secondary" id="episode-audio-upload"><?php _e( 'Select', 'episode-audio' ); ?></button>
 		<button type="button" class="button-link" style="margin: .4em 0 0 .5em; display: none;" id="episode-audio-remove"><?php _e( 'Remove', 'episode-audio' ); ?></button>
 		<input type="hidden" name="episode-audio" id="audio-attachment-id" value="<?php echo $audio_attachment_id; ?>" />
+		<div id="episode-audio-downloads">
+			Downloaded <?php echo get_post_meta($post->ID, 'downloads', true); ?> times
+		</div>
 	</div>
 	<?php
 }

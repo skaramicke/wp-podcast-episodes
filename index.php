@@ -47,6 +47,8 @@ add_action('init', function() {
 
 require( plugin_dir_path( __FILE__ ) . '/post-meta.php' );
 
+require( plugin_dir_path( __FILE__ ) . '/episode-download-counting.php' );
+
 // Load template for content display.
 add_filter( 'the_content', function( $the_content ) {
 	if ( get_post_type() == 'episode' ) {
@@ -66,14 +68,23 @@ function get_the_podcast_episode( $args = array() ) {
     ) );
     $audio_url = get_episode_audio_src( $args['id'] );
 	if ($audio_url) {
-        return 'audio player';
+        $fake_audio_url = get_the_permalink();
+        if (substr($fake_audio_url, -1) == '/') {
+            $fake_audio_url = substr($fake_audio_url, 0, -1).'.mp3';
+        }
+        return '<audio controls><source src="'.$fake_audio_url.'" type="audio/mpeg"></audio>';
     }
-    return 'no audio player';
+    return '';
 }
 
 function get_episode_audio_src( $id ) {
 	$audio_attachment_id = get_episode_audio_attachment_id( $id );
 	return ( $audio_attachment_id ) ? wp_get_attachment_url( $audio_attachment_id ) : '';
+}
+
+function get_episode_audio_path( $id ) {
+	$audio_attachment_id = get_episode_audio_attachment_id( $id );
+	return ( $audio_attachment_id ) ? get_attached_file( $audio_attachment_id ) : '';
 }
 
 function get_episode_audio_attachment_id( $id = null ) {
